@@ -38,7 +38,7 @@ The above interface is just shown for illustration, please refer to [std::alloca
 
 STL provides you a default [std::allocator](https://en.cppreference.com/w/cpp/memory/allocator), but you can implement your own to replace it. For example, you can design a memory pool to speed up the dynamic allocation of a large number of small blocks (e.g., 8 bytes, 16 bytes, ...), and to reduce memory fragmentation.
 
-![Fig1](https://github.com/ZSYTY/STL-allocator/resource/Fig1.png)
+![Fig1](https://github.com/ZSYTY/STL-allocator/blob/master/resource/Fig1.png)
 
 Figure 1: Mem pool using block based allocation strategy.
 
