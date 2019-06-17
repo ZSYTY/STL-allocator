@@ -2,9 +2,11 @@
 #include <random>
 #include <vector>
 
+#include "allocator.hpp"
+
 // include header of your allocator here
 template <class T>
-using MyAllocator = std::allocator<T>; // replace the std::allocator with your allocator
+using MyAllocator = Mallocator<T>; // replace the std::allocator with your allocator
 using Point2D = std::pair<int, int>;
 
 const int TestSize = 10000;
