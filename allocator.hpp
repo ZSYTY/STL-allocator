@@ -3,6 +3,44 @@
 
 #include <cstdlib>
 #include <new>
+#include <cstddef>
+#include <climits>
+#include <iostream>
+#define MAX_BYTES 128
+#define BOUND 8
+
+
+template <int inst>
+class __fir_alloc
+{
+/*	private:
+		static void *oom_malloc(std::size_t);
+		static void *oom_realloc(void *, std::size_t);
+		static void (* __fir_alloc_oom_handler) ();
+*/	
+	public:
+		static void *allocate(std::size_t n)
+		{
+			void *res = std::malloc(n);
+			if (res == 0)
+				throw std::bad_alloc();
+
+//				res = oom_malloc(n);
+			return res;
+		}
+
+		static void deallocate(void *p, std::size_t)
+		{
+			std::free(p);
+		}
+}
+/*
+template <bool threads, int inst>
+class __sec_alloc
+{
+	;
+}
+*/
 
 template <class T>
 struct Mallocator
@@ -23,7 +61,7 @@ struct Mallocator
         throw std::bad_alloc();
     }
     
-    void deallocate(T* p, std::size_t) noexcept 
+    void deallocate(T* p, std::size_t)
 	{
         std::free(p);
     }
