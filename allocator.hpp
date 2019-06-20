@@ -11,6 +11,12 @@
 #define COUNT_FREE_LISTS 16
 
 
+union obj
+{
+	union obj *nxt;
+	char client_data[1];
+};
+
 template <int inst>
 class __fir_alloc
 {
@@ -40,13 +46,14 @@ class __fir_alloc
 template <bool threads, int inst>
 class __sec_alloc
 {
-	private:
+/*	private:
 		union obj
 		{
-			union obj *free_list_link;
-			char cli_data[1];
+			union obj *nxt;
+			char client_data[1];
 		};
-
+*/
+	private:
 		static obj *volatile free_list[COUNT_FREE_LISTS];
 		static std::size_t free_list_idx(std::size_t bytes)
 		{
@@ -67,9 +74,38 @@ class __sec_alloc
 		static std::size_t heap_size;
 
 	public:
-		static void *allocate(std::size_t n);
+		static void *allocate(std::size_t n)
+		{
+			obj *volatile *cur_free_list;
+			obj *res;
+			if (n > (std::size_t) MAX_BYTES)
+				return __fir_alloc<0>::allocate(n);
+
+			cur_free_list = free_list[free_list_idx(n)];
+			res = *cur_free_list;
+			if (res == 0)
+			{
+				void *r = refill(ceil_up(n));
+				return r;
+			}
+			*cur_free_list = res->nxt;
+			return res;
+		}
 		
-		static void deallocate(void *p, std::size_t n);
+		static void deallocate(void *p, std::size_t n)
+		{
+			obj *q = (obj *)p;
+			obj *volatile *cur_free_list;
+			if (n > (std::size_t) MAX_BYTES)
+			{
+				__fir_alloc<0>::deallocate(p, n);
+				return ;
+			}
+
+			cur_free_list = free_list[free_list_idx(n)];
+			q->nxt = *cur_free_list;
+			*cur_free_list = q;
+		}
 
 		static void *reallocate(void *p, std::size_t old_size, std::size_t new_size);
 
@@ -85,8 +121,7 @@ template <bool threads, int inst>
 std::size_t __sec_alloc <threads, inst> :: heap_size = 0;
 
 template <bool threads, int inst>
-__sec_alloc <threads, inst> :: obj *volatile 
-__sec_alloc <threads, inst> :: free_list[CNT_FREE_LIST] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+obj *volatile __sec_alloc <threads, inst> :: free_list[COUNT_FREE_LISTS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 
 template <class T>
