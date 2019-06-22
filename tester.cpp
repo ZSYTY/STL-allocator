@@ -6,14 +6,14 @@
 
 // include header of your allocator here
 template <class T>
-using MyAllocator = Mallocator<T>; // replace the std::allocator with your allocator
+using MyAllocator =
+    Mallocator<T>;  // replace the std::allocator with your allocator
 using Point2D = std::pair<int, int>;
 
 const int TestSize = 10000;
 const int PickSize = 1000;
 
-int main()
-{
+int main() {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(1, TestSize);
@@ -21,17 +21,14 @@ int main()
     // vector creation
     using IntVec = std::vector<int, MyAllocator<int>>;
     std::vector<IntVec, MyAllocator<IntVec>> vecints(TestSize);
-    for (int i = 0; i < TestSize; i++)
-        vecints[i].resize(dis(gen));
+    for (int i = 0; i < TestSize; i++) vecints[i].resize(dis(gen));
 
     using PointVec = std::vector<Point2D, MyAllocator<Point2D>>;
     std::vector<PointVec, MyAllocator<PointVec>> vecpts(TestSize);
-    for (int i = 0; i < TestSize; i++)
-        vecpts[i].resize(dis(gen));
+    for (int i = 0; i < TestSize; i++) vecpts[i].resize(dis(gen));
 
     // vector resize
-    for (int i = 0; i < PickSize; i++)
-    {
+    for (int i = 0; i < PickSize; i++) {
         int idx = dis(gen) - 1;
         int size = dis(gen);
         vecints[idx].resize(size);
@@ -47,7 +44,8 @@ int main()
         if (vecints[idx1][idx2] == val)
             std::cout << "correct assignment in vecints: " << idx1 << std::endl;
         else
-            std::cout << "incorrect assignment in vecints: " << idx1 << std::endl;
+            std::cout << "incorrect assignment in vecints: " << idx1
+                      << std::endl;
     }
     {
         Point2D val(11, 15);
@@ -57,7 +55,8 @@ int main()
         if (vecpts[idx1][idx2] == val)
             std::cout << "correct assignment in vecpts: " << idx1 << std::endl;
         else
-            std::cout << "incorrect assignment in vecpts: " << idx1 << std::endl;
+            std::cout << "incorrect assignment in vecpts: " << idx1
+                      << std::endl;
     }
 
     return 0;
