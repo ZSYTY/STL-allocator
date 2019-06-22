@@ -13,7 +13,7 @@
 using Point2D = std::pair<int, int>;
 
 const int TestSize = 10000;
-const int PickSize = 1000;
+const int PickSize = 10000;
 
 template <template <class> class MyAllocator>
 class tester {
@@ -74,7 +74,7 @@ int main() {
     tester<Nallocator> tester1;
     start = clock();
     tester1.main();
-    std::cout << "Allocator without memory pool cost: "
+    std::cout << "Naive allocator without memory pool cost: "
               << (clock() - start) * 1.0 / CLOCKS_PER_SEC << " seconds"
               << std::endl
               << std::endl;

@@ -1,5 +1,5 @@
-#ifndef NAIVEALLOCATOR_HPP
-#define NAIVEALLOCATOR_HPP
+#ifndef NAIVE_ALLOCATOR_HPP
+#define NAIVE_ALLOCATOR_HPP
 
 #include <climits>
 #include <cstddef>
@@ -7,6 +7,8 @@
 #include <iostream>
 #include <new>
 
+// naive allocator interface
+// using malloc and free only
 template <class T>
 class Nallocator {
    public:
