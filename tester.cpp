@@ -6,18 +6,17 @@
 #include "allocator.hpp"
 #include "naive_allocator.hpp"
 
-// include header of your allocator here
-// template <class T>
-// using MyAllocator =
-// Mallocator<T>;  // replace the std::allocator with your allocator
 using Point2D = std::pair<int, int>;
 
 const int TestSize = 10000;
+// PickSize is increase to 10000 to make the test result more apparent
 const int PickSize = 10000;
 
+// The tester for different allocator
 template <template <class> class MyAllocator>
 class tester {
    public:
+    // the main function is provided by the project requirement
     void main() {
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -71,6 +70,7 @@ class tester {
 int main() {
     clock_t start;
 
+    // test the naive allocator, which uses malloc and free only
     tester<Nallocator> tester1;
     start = clock();
     tester1.main();
@@ -79,6 +79,7 @@ int main() {
               << std::endl
               << std::endl;
 
+    // test our allocator, which uses memory pool
     tester<Mallocator> tester2;
     start = clock();
     tester2.main();
@@ -87,6 +88,7 @@ int main() {
               << std::endl
               << std::endl;
 
+    // test std::allocator
     tester<std::allocator> tester3;
     start = clock();
     tester3.main();
