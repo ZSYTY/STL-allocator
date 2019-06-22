@@ -6,9 +6,10 @@
 #include <cstdlib>
 #include <iostream>
 #include <new>
-enum { MAX_BYTES = 128 };
-enum { BOUND = 8 };
-enum { COUNT_FREE_LISTS = 16 };
+
+enum { MAX_BYTES = 65536 };
+enum { BOUND = 64 };
+enum { COUNT_FREE_LISTS = MAX_BYTES / BOUND };
 
 union obj {
     union obj *free_list_link;
@@ -155,7 +156,8 @@ obj *volatile __sec_alloc::free_list[COUNT_FREE_LISTS] = {
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 template <class T>
-struct Mallocator {
+class Mallocator {
+   public:
     typedef T value_type;
 
     Mallocator() = default;
@@ -170,9 +172,7 @@ struct Mallocator {
         throw std::bad_alloc();
     }
 
-    void deallocate(T *p, std::size_t n) {
-        __sec_alloc::deallocate(p, n);
-    }
+    void deallocate(T *p, std::size_t n) { __sec_alloc::deallocate(p, n); }
 };
 
 template <class T1, class T2>

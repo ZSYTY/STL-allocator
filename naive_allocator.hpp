@@ -8,16 +8,16 @@
 #include <new>
 
 template <class T>
-class Mallocator {
+class Nallocator {
    public:
     typedef T value_type;
     typedef size_t size_type;
     typedef ptrdiff_t difference_type;
 
-    Mallocator() = default;
+    Nallocator() = default;
 
     template <class U>
-    Mallocator(const Mallocator<U>& other) noexcept;
+    Nallocator(const Nallocator<U>& other) noexcept;
 
     T* allocate(std::size_t n) {
         auto buf = (T*)(::operator new((std::size_t)(n * sizeof(T))));
@@ -29,12 +29,12 @@ class Mallocator {
 };
 
 template <class T1, class T2>
-bool operator==(const Mallocator<T1>& lhs, const Mallocator<T2>& rhs) {
+bool operator==(const Nallocator<T1>& lhs, const Nallocator<T2>& rhs) {
     return true;
 }
 
 template <class T1, class T2>
-bool operator!=(const Mallocator<T1>& lhs, const Mallocator<T2>& rhs) {
+bool operator!=(const Nallocator<T1>& lhs, const Nallocator<T2>& rhs) {
     return false;
 }
 
